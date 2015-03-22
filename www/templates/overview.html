@@ -1,0 +1,20 @@
+<ion-view title="Overview">
+  <ion-content>
+    <ion-list>
+      <ion-item class="factors-list" ng-repeat="factor in factors" type="item-text-wrap">
+        <ul class="factor-overview">
+          <li class="factor-name overview"><br/>{{factor.name}}</li> 
+          <li class="value-and-state overview">
+            <p class="factor-value">{{factor.summary()}}</p>
+            <p class=state>Devices: {{factor.device_summary()}}</p></li>
+          <li class="detail-link overview">
+          <br/>
+            <a  href="#tab/overview/{{factor.id}}">
+              <img src="../img/right-arrow.png" height="40px" width="40px"/>
+            </a>
+          </li>
+        </ul>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

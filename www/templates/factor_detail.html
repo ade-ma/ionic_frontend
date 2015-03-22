@@ -1,0 +1,32 @@
+<ion-view title="{{factor.name}}">
+  <ion-content has-header="true" padding="false">
+    <ion-list>
+      <ion-item>
+          <canvas id="value_plot_{{factor.id}}" width="300" height="150" plot-directive>.
+          </canvas>
+      </ion-item>
+      <ion-item ng-repeat="device in factor.devices()" class="detail-item">
+        <ul class="details">
+          <li class="override">
+            <div class="current-state">
+              {{device.name}} is <br/>
+              <span class='state-word' id='current-state-word-{{device.id}}'>
+                {{device.states[device.state]}}
+                </span>
+              </div>
+            <div class="override">
+              <button class="button button-stable" ng-click="override({{device.id}})">
+                Turn {{device.name}} <span class='state-word' id='current-not-state-word-{{device.id}}'>{{device.states[1 - device.state]}}</span>
+              </button>
+            </div>
+            <div class='override-warning' id='override-warning-{{device.id}}' override-directive>
+              Override:<br/>
+              <span id="override-duration-{{device.id}}">
+              </span>
+            </div>
+          </li>
+        </ul>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
