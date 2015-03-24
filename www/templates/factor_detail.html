@@ -1,7 +1,7 @@
 <ion-view title="{{factor.name}}">
   <ion-content has-header="true" padding="false">
     <ion-list>
-      <ion-item>
+      <ion-item ng-Show="{{factor.name != 'Lights'}}">
           <canvas id="value_plot_{{factor.id}}" width="300" height="150" plot-directive>.
           </canvas>
       </ion-item>

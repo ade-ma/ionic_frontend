@@ -46,14 +46,12 @@ function Device(device_descriptor){
      *  (this.outlet_name defined in the descriptors in this document
      * Probably need to do service.post.
      */
-    YQI = escape("select * from yahoo.finance.quotes where symbol in ('AAPL','GOOG','MSFT')");
-    URL = "http://query.yahooapis.com/v1/public/yql?q=" + YQI +      "&format=json&env=http://datatables.org/alltables.env&callback=";
+    URL = "http://192.168.1.101:5000/toggleOutlet"
     this.factor.service.get(URL)
     .success(function(data, status, headers, config) {
-    //console.log("response", data);  
+    console.log("response", data);  
     
-    // keep track of the state
-    this.state = 1 - this.state;});
+    });
   }
   
   this.override_left = function() {
@@ -67,7 +65,14 @@ function Device(device_descriptor){
   }
   
   this.cancel_override = function() {
+    URL = "http://192.168.1.101:5000/toggleOutlet";
     this._override_duration = 0;
+    this.factor.service.get(URL)
+    .success(function(data, status, headers, config) {
+    console.log("response", data);  
+    
+    // keep track of the state
+    this._override_duration = 0;});
   }
   
   // e.g. 'heater' or 'fan' etc
@@ -106,7 +111,7 @@ var device_descriptors = [
     { id: 3,
       name: 'lights',
       factor: FACTORS[3],
-      state: 1,
+      state: 0,
       outlet_name: 3},
     { id: 4, 
       state: 0,
