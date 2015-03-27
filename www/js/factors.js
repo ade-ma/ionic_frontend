@@ -75,24 +75,16 @@ function Factor(factor_descriptor){
      *
      */
 
-    URL = "http://192.168.1.101:5000/lastTemp?ID=214";// + callback;
+    URL = "http://192.168.1.101:5000/last" + this.name + "?ID=214";
     service.get(URL)
     .success(function(data, status, headers, config) {
-      //console.log("response", data.query.results.quote[0].symbol)
+      console.log(data)
       var time = new Date();
-      //this.values.push([time.getTime(), parseFloat(data)]);
+      values2.push([time.getTime(), parseFloat(data)]);
     })
     .error(function(data, status, headers, config) {
       //console.log("response", data.query.results.quote[0].symbol)
-      var time = new Date();
-      console.log(data);
-      //values2.push([time.getTime(), parseFloat(data)]);
     });
-    
-    // update the values with the latest
-    var time = new Date();
-    this.values.push([time.getTime(), 60+Math.sin(time.getTime()/5000)/2+Math.sin(time.getTime()/50000)+ this.id*2*Math.sin(time.getTime()/100000)]);
-    //this.values = values2;
   }
   
   // get most recent value
