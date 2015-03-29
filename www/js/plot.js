@@ -47,7 +47,6 @@ function plot(canvas, x, y){
   // calculate pixels between ticks
   var tick_spacing = (x_accuracy*x_scale);
   var num_ticks =  Math.floor(plot_size.x/tick_spacing);
-  //console.log("ticks: ", num_ticks);
   var label_freq = Math.ceil(50/(plot_size.y/num_ticks));
   var tick_length = 8;
   var begin = [];
@@ -56,7 +55,7 @@ function plot(canvas, x, y){
   for(var i = 0; i <= num_ticks; i++){
     
     // copmute the x value
-    x_pixel = origin.x + i*tick_spacing;
+    x_pixel = Math.round(origin.x + i*tick_spacing);
     
     // draw label (and make stroke bigger) if appropriate
     if(mod(i,label_freq) == 0){
@@ -64,6 +63,7 @@ function plot(canvas, x, y){
       
       //draw label
       var value = (x_pixel - origin.x)/x_scale + x_range[0];
+      value = x_range[0] + i*x_accuracy;
       value = x.string(value);
       ctx.fillText(value, x_pixel - 20, canvas.height - 5);
     }
@@ -168,7 +168,10 @@ function compute_accuracy(data, res){
     else
       accuracy = res;
   }
-  //console.log("accuracy: ", accuracy, '-', digits);
+  console.log("accuracy: ", accuracy, '-', digits);
+  
+  if (accuracy < 1)
+    accuracy = 1;
   return accuracy;
 }
 

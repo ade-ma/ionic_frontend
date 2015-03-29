@@ -10,7 +10,7 @@ function pretty_time(millis){
   var hours = millis - millis % (1000*60*60);
   var minutes = (millis - hours) - (millis - hours) % (1000*60);
   var seconds = (millis - hours - minutes) - (millis - hours - minutes) % 1000;
-  return [pretty_int(Math.floor(hours/(1000*60*60))), pretty_int(Math.floor(minutes/(60*1000))), pretty_int(Math.floor(seconds/1000))].join(':');
+  return [pretty_int(Math.floor(hours/(1000*60*60))), pretty_int(Math.floor(minutes/(60*1000))), pretty_int(Math.round(seconds/1000))].join(':');
 }
 
 // a device

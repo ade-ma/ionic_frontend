@@ -88,7 +88,7 @@ function Factor(factor_descriptor){
       console.log("error getting new data")
     });
     var time = new Date();
-    //this.values.push([time.getTime(), 57+((id*id+id+1)%7)+Math.sin(time.getTime()/100000)+(id+1)*Math.cos(time.getTime()/600000)+8*Math.sin(time.getTime()/6000000)]);
+    this.values.push([time.getTime(), 57+((id*id+id+1)%7)+Math.sin(time.getTime()/100000)+(id+1)*Math.cos(time.getTime()/600000)+8*Math.sin(time.getTime()/6000000)]);
   }
   
   // get most recent value
