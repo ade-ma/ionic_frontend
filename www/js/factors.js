@@ -77,18 +77,28 @@ function Factor(factor_descriptor){
      *
      */
 
-    URL = "http://192.168.1.101:5000/last" + this.name + "?ID=214";
+    URL = "http://"+SERVER_IP+":5000/last" + this.name + "?ID=001";
+    if (this.name == "Lights"){
+        return;
+    }
     service.get(URL)
     .success(function(data, status, headers, config) {
       console.log(data)
-      var time = new Date();
-      values2.push([time.getTime(), parseFloat(data)]);
+      var array = data.split("--");
+      var time = parseInt(array[0]);
+      
+      // only update if the value is new
+      if (values2.length == 0){
+          values2.push([time, parseFloat(array[1])]);
+      }
+      else if (values2.slice(-1)[0][0] != time){
+          values2.push([time, parseFloat(array[1])]);
+      }
     })
     .error(function(data, status, headers, config) {
       console.log("error getting new data")
     });
-    var time = new Date();
-    this.values.push([time.getTime(), 57+((id*id+id+1)%7)+Math.sin(time.getTime()/100000)+(id+1)*Math.cos(time.getTime()/600000)+8*Math.sin(time.getTime()/6000000)]);
+    //this.values.push([time.getTime(), 57+((id*id+id+1)%7)+Math.sin(time.getTime()/100000)+(id+1)*Math.cos(time.getTime()/600000)+8*Math.sin(time.getTime()/6000000)]);
   }
   
   // get most recent value
@@ -114,12 +124,12 @@ var factor_descriptors = [
       summary: average_latest,
       string: hum_to_string,
       values:  []},
-    { id: 2,
+    /*{ id: 2,
       name: 'Soil Moisture',
       summary: average_latest,
       string: hum_to_string,
-      values: []},
-    { id: 3,
+      values: []},*/
+    { id: 2,
       name: 'Lights',
       summary: average_state,
       values:[],
@@ -130,6 +140,6 @@ var factor_descriptors = [
 var FACTORS = [
   new Factor(factor_descriptors[0]),
   new Factor(factor_descriptors[1]),
-  new Factor(factor_descriptors[2]),
-  new Factor(factor_descriptors[3])
+  new Factor(factor_descriptors[2])//,
+  //new Factor(factor_descriptors[3])
 ]

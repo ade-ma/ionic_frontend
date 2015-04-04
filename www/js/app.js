@@ -5,6 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
+SERVER_IP = "192.168.1.103"
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
@@ -24,7 +25,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($http, Update) {
     Update.all();
-    setInterval(Update.all, 30000);
+    setInterval(Update.all, 10000);
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

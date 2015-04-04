@@ -168,7 +168,6 @@ function compute_accuracy(data, res){
     else
       accuracy = res;
   }
-  console.log("accuracy: ", accuracy, '-', digits);
   
   if (accuracy < 1)
     accuracy = 1;

@@ -37,7 +37,6 @@ angular.module('starter.services', [])
           if(plot_canvas){
             var factor = FACTORS[factor_id];
             var data = factor.values;
-    
             var time = new Date();
     
             var x = {
