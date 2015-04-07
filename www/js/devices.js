@@ -46,7 +46,7 @@ function Device(device_descriptor){
      *  (this.outlet_name defined in the descriptors in this document
      * Probably need to do service.post.
      */
-    URL = "http://"+SERVER_IP+":5000/toggleOutlet?factor=" + this.factor.name;
+    URL = "http://"+SERVER_IP+"/toggleOutlet?factor=" + this.factor.name;
     this.factor.service.get(URL)
     .success(function(data, status, headers, config) {
     console.log("response", data);  
@@ -65,7 +65,7 @@ function Device(device_descriptor){
   }
   
   this.cancel_override = function() {
-    URL = "http://"+SERVER_IP+":5000/toggleOutlet?factor=" + this.factor.name;
+    URL = "http://"+SERVER_IP+"/toggleOutlet?factor=" + this.factor.name;
     this._override_duration = 0;
     this.factor.service.jsonp(URL)
     .success(function(data, status, headers, config) {

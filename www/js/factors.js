@@ -77,7 +77,7 @@ function Factor(factor_descriptor){
      *
      */
 
-    URL = "http://"+SERVER_IP+":5000/last" + this.name + "?ID=001";
+    URL = "http://"+SERVER_IP+"/last" + this.name + "?ID=001";
     if (this.name == "Lights"){
         return;
     }
