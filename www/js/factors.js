@@ -141,23 +141,23 @@ var factor_descriptors = [
       name: 'Humidity',
       summary: average_latest,
       string: hum_to_string,
-      values:  []},
+      values:  []}];
     /*{ id: 2,
       name: 'Soil Moisture',
       summary: average_latest,
       string: hum_to_string,
-      values: []},*/
+      values: []},
     { id: 2,
       name: 'Lights',
       summary: average_state,
       values:[],
       string: identity}
-  ];
+  ];*/
 
 // create global array of the factor aobjects
 var FACTORS = [
   new Factor(factor_descriptors[0]),
   new Factor(factor_descriptors[1]),
-  new Factor(factor_descriptors[2])//,
+  //new Factor(factor_descriptors[2])//,
   //new Factor(factor_descriptors[3])
 ]
