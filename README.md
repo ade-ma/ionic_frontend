@@ -4,7 +4,7 @@ To run on a computer all you need:
 
     npm install -g cordova ionic
 
-To launch:
+To launch for development:
 
     ionic serve
     
@@ -23,4 +23,7 @@ To compile for native is a multi-step process
         ionic build android
 
 - to run on a device simply connect android phone and execute `ionic run android` 
+- to deploy with node
+
+        node server
         
