@@ -1,104 +1,122 @@
 function temp_to_string(temp){
-  temp = Math.round(temp*1)/1;
-  return String(temp) + "\u2109";
+    temp = Math.round(temp*1)/1;
+    return String(temp) + "\u2109";
 }
 
 function hum_to_string(humidity){
-  return String(Math.round(humidity)) + '%';
+    return String(Math.round(humidity)) + '%';
 }
 
 function identity(value){
-  return value;
+    return value;
 }
 
 function average_latest(){
-  return this.string(this.latest_value());
+    return this.string(this.latest_value());
 }
 
 function average_state(){
-  var states = ['all off', 'some on', 'all on'];
-  var state_sum = 0;
-  for(var i = 0; i < this.devices().length; i++){
-    state_sum += this.devices()[i].state;
-  }
+    var states = ['all off', 'some on', 'all on'];
+    var state_sum = 0;
+    for(var i = 0; i < this.devices().length; i++){
+      state_sum += this.devices()[i].state;
+    }
   
-  if (state_sum == 0)
-    return states[0];
-  else if (state_sum < this.devices().length)
-    return states[1];
-  else
-    return states[2];
+    if (state_sum == 0)
+      return states[0];
+    else if (state_sum < this.devices().length)
+      return states[1];
+    else
+      return states[2];
 }
 
 // one of the environmental factors, humidity, heat etc.
 function Factor(factor_descriptor){
   
-  // e.g. 'humidity' or 'temperature'
-  this.name = factor_descriptor.name;
-  
-  // unique etc.
-  this.id = factor_descriptor.id;
-  
-  // used to mark which recursive chain it belongs in
-  this.chain = 0;
-  
-  // function for appending the right symbol for the units
-  this.string = factor_descriptor.string;
-  
-  // return a list of all the Device objects that effect this factor
-  this._devices = [];
-  this.devices = function() {
-    if(this._devices.length == 0){
-      for(var i = 0; i < DEVICES.length; i++){
-        if (DEVICES[i].factor == this)
-          this._devices.push(DEVICES[i]);
-      }
-    }
-    return this._devices;
-  }
-  
-  // return the summary of the state of this factor
-  this.summary = factor_descriptor.summary;
-  
-  // summary of device states
-  this.device_summary = average_state;
-  
-  // data about this environmental factor
-  this.values = factor_descriptor.values;
-  
-  //update values
-  this.update = function(service) {
-    var values2 = this.values;
-    id = this.id;
-    console.log(id);
+    // e.g. 'humidity' or 'temperature'
+    this.name = factor_descriptor.name;
     
-    /*
-     *  This AJAX call should get the latest value for this factor
-     *
-     */
-
-    URL = "http://"+SERVER_IP+"/last" + this.name + "?ID=001";
-    if (this.name == "Lights"){
-        return;
+    // unique etc.
+    this.id = factor_descriptor.id;
+    
+    // used to mark which recursive chain it belongs in
+    this.chain = 0;
+    
+    // function for appending the right symbol for the units
+    this.string = factor_descriptor.string;
+    
+    // return a list of all the Device objects that effect this factor
+    this._devices = [];
+    this.devices = function() {
+      if(this._devices.length == 0){
+        for(var i = 0; i < DEVICES.length; i++){
+          if (DEVICES[i].factor == this)
+            this._devices.push(DEVICES[i]);
+        }
+      }
+      return this._devices;
     }
-    service.get(URL)
-    .success(function(data, status, headers, config) {
-      console.log(data)
-      var array = data.split("--");
-      var time = parseInt(array[0]);
+    
+    // return the summary of the state of this factor
+    this.summary = factor_descriptor.summary;
+    
+    // summary of device states
+    this.device_summary = average_state;
+    
+    // data about this environmental factor
+    this.values = factor_descriptor.values;
+    
+    //update values
+    this.update = function(service) {
+        var values2 = this.values;
+        id = this.id;
+        console.log(id);
       
-      // only update if the value is new
-      if (values2.length == 0){
-          values2.push([time, parseFloat(array[1])]);
+        /*
+         *  This AJAX call should get the latest value for this factor
+         *
+         */
+    
+        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001";
+        if (this.name == "Lights"){
+            return;
+        }
+        service.get(URL)
+        .success(function(data, status, headers, config){
+            points = data.split(";");
+            values2.length = 0;
+            for (var i = 0; i < points.length; i++){
+                points[i] = points[i].split("--");
+              
+                // turn time into an int
+                points[i][0] = parseInt(points[i][0]);
+              
+                // turn value into float
+                points[i][1] = parseFloat(points[i][1]);
+                
+                values2.push(points[i]);
+            }
+        })
+        .error(function(data, status, headers, config) {
+            console.log("error getting new data")
+        });
+    }
+    
+  this.updateValues = function (data, status, headers, config){
+      
+      var points = data.split(";");
+      console.log(points);
+      for (var i = 0; i < points.length; i++){
+          points[i] = points[i].split("--");
+          
+          // turn time into an int
+          points[i][0] = parseInt(points[i][0]);
+          
+          // turn value into float
+          points[i][1] = parseFloat(points[i][1]);
       }
-      else if (values2.slice(-1)[0][0] != time){
-          values2.push([time, parseFloat(array[1])]);
-      }
-    })
-    .error(function(data, status, headers, config) {
-      console.log("error getting new data")
-    });
-    //this.values.push([time.getTime(), 57+((id*id+id+1)%7)+Math.sin(time.getTime()/100000)+(id+1)*Math.cos(time.getTime()/600000)+8*Math.sin(time.getTime()/6000000)]);
+      this.values = points;
+      console.log(this.id);
   }
   
   // get most recent value

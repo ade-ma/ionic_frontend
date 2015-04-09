@@ -7,10 +7,19 @@ function pretty_int(int){
 }
 
 function pretty_time(millis){
+  addendum = "";
+  if (millis < 0){
+    millis = -millis;
+    addendum = " ago";
+  }
+  
   var hours = millis - millis % (1000*60*60);
   var minutes = (millis - hours) - (millis - hours) % (1000*60);
   var seconds = (millis - hours - minutes) - (millis - hours - minutes) % 1000;
-  return [pretty_int(Math.floor(hours/(1000*60*60))), pretty_int(Math.floor(minutes/(60*1000))), pretty_int(Math.round(seconds/1000))].join(':');
+  if ((hours == 0) && (minutes == 0) && (seconds < 5)){
+    return "Now";
+  }
+  return [pretty_int(Math.floor(hours/(1000*60*60))), pretty_int(Math.floor(minutes/(60*1000))), pretty_int(Math.round(seconds/1000))].join(':') + addendum;
 }
 
 // a device

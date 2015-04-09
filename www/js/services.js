@@ -42,14 +42,14 @@ angular.module('starter.services', [])
             var x = {
                 data: [],
                 string: function(value){
-                            return pretty_time(value)+ ' ago';
+                            return pretty_time(value);
                 }};
             var y = {
               data: [],
               string: FACTORS[factor_id].string};
             
             for (var i = 0; i < data.length; i++){
-              x.data.push(time.getTime() - data[i][0]);
+              x.data.push(-time.getTime() + data[i][0]);
               y.data.push(data[i][1]);
             
             plot(plot_canvas, x, y);

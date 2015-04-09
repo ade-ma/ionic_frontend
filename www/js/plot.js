@@ -9,7 +9,7 @@ function plot(canvas, x, y){
   var x_label_height = 35;
   var y_label_width = 50;
   var origin = {
-    x: y_label_width,
+    x: canvas.width - y_label_width,
     y: canvas.height - x_label_height
   };
   
@@ -21,20 +21,21 @@ function plot(canvas, x, y){
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // determine ranges
+  // determine order of magnitude (step size)
   var x_accuracy = compute_accuracy(x.data, 6);
   var y_accuracy = compute_accuracy(y.data);
   
   // determine endpoints
   var x_range = compute_range(x_accuracy, x.data);
   var y_range = compute_range(y_accuracy, y.data);
-    
+  console.log(x_range);
+  console.log(y_range);
   // determine scales (conversion from units of x and y to pixels)
   var x_scale = compute_scale(plot_size.x, x_range);
   var y_scale = compute_scale(plot_size.y, y_range);
   
   // draw axes
-  draw_axes(canvas, y_label_width, x_label_height);
+  draw_axes(canvas, origin);
   
   
    /*********************************
@@ -51,19 +52,19 @@ function plot(canvas, x, y){
   var tick_length = 8;
   var begin = [];
   var end = [];
-  var x_pixel = 0;
+  var x_pixel = canvas.width;
   for(var i = 0; i <= num_ticks; i++){
     
     // copmute the x value
-    x_pixel = Math.round(origin.x + i*tick_spacing);
+    x_pixel = Math.round(origin.x - i*tick_spacing);
     
     // draw label (and make stroke bigger) if appropriate
     if(mod(i,label_freq) == 0){
       ctx.lineWidth = 4;
       
       //draw label
-      var value = (x_pixel - origin.x)/x_scale + x_range[0];
-      value = x_range[0] + i*x_accuracy;
+      var value = (x_pixel - origin.x)/x_scale;// - x_range[1];
+      value = x_range[1] - i*x_accuracy;
       value = x.string(value);
       ctx.fillText(value, x_pixel - 20, canvas.height - 5);
     }
@@ -93,13 +94,13 @@ function plot(canvas, x, y){
       //draw label
       var value = ( -y_pixel + origin.y)/y_scale + y_range[0];
       value = y.string(value);
-      ctx.fillText(value, 0, y_pixel);
+      ctx.fillText(value, origin.x + tick_length + 2, y_pixel+5);
       
       // draw horizontal marker if not on axis
       if(i != 0){
         ctx.strokeStyle = '#cccccc';
         ctx.lineWidth = 1;
-        draw_line(ctx, [origin.x+1, Math.floor(y_pixel)+.5], [canvas.width, Math.floor(y_pixel)+.5]);
+        draw_line(ctx, [origin.x-1, Math.floor(y_pixel)+.5], [0, Math.floor(y_pixel)+.5]);
         set_tick_style(ctx);
       }
       
@@ -110,7 +111,7 @@ function plot(canvas, x, y){
       ctx.lineWidth = 2;
     
     begin = [origin.x, y_pixel];
-    end = [origin.x - tick_length, y_pixel];
+    end = [origin.x + tick_length, y_pixel];
     draw_line(ctx, begin, end);
   }
   
@@ -119,18 +120,18 @@ function plot(canvas, x, y){
    * Now we actually plot the data
    *******************************/
 
-  ctx.strokeStyle = '#000000';
+  ctx.strokeStyle = '#0099bb';
   
   var x_pixel = -1;
   var y_pixel = -1;
   var old_x = -1;
   var old_y = -1;
   for( var i = 0; i < x.data.length; i++){
-    // remember lsat point
+    // remember last point
     old_x = x_pixel;
     old_y = y_pixel;
     
-    x_pixel = origin.x + (x.data[i] - x_range[0])*x_scale;
+    x_pixel = origin.x + (x.data[i] - x_range[1])*x_scale;
     y_pixel = origin.y - (y.data[i] - y_range[0])*y_scale;
     // draw line from last point if there was a last point
     if(old_x > 0){
@@ -138,11 +139,13 @@ function plot(canvas, x, y){
       draw_line(ctx, [old_x, old_y], [x_pixel, y_pixel]);
     }
     
-    // draw a circle around it
-    ctx.beginPath();
-    ctx.lineWidth = 3;
-    ctx.arc(x_pixel, y_pixel, 2, 0, Math.PI*2);
-    ctx.stroke();
+    // draw a circle around it if it is the last point
+    if (x.data.length == i+1){
+        ctx.beginPath();
+        ctx.lineWidth = 4;
+        ctx.arc(x_pixel, y_pixel, 2, 0, Math.PI*2);
+        ctx.stroke();
+    }
   }
 }
 
@@ -163,8 +166,16 @@ function compute_accuracy(data, res){
     var digits = Math.ceil(Math.log(max_value - min_value)/Math.log(10));
   
     // the accuracy should scale with the number of digit
-    if(digits != 1)
+    if(digits != 1)      
       accuracy = res*Math.pow(10,Math.ceil(digits - 2));
+      
+      // force half-hour/hour scale in this situation
+      if (res == 6){
+        if (digits > 7 && digits < 9){
+            accuracy = 1000*60*30;
+        }  
+      }
+      
     else
       accuracy = res;
   }
@@ -203,20 +214,20 @@ function compute_num_ticks(size, accuracy, scale){
 }
 
 
-function draw_axes(canvas, x_offset, y_offset){
+function draw_axes(canvas, origin){
   var ctx = canvas.getContext("2d");
   ctx.lineWidth = 2;
-  ctx.strokeStyle = '#555555';
+  ctx.strokeStyle = '#666666';
   
   //draw x_axis  
   draw_line(ctx,
-            [x_offset, canvas.height - y_offset],
-            [canvas.width, canvas.height - y_offset]);
+            [origin.x, origin.y],
+            [0, origin.y]);
   
   // draw y-axis
   draw_line(ctx,
-            [x_offset, canvas.height - y_offset + ctx.lineWidth/2],
-            [x_offset, 0]);
+            [origin.x, origin.y + ctx.lineWidth/2],
+            [origin.x, 0]);
 }
 
 function draw_line(ctx, begin, end){
@@ -229,7 +240,7 @@ function draw_line(ctx, begin, end){
 
 function set_tick_style(ctx){
   ctx.lineWidth = 2;
-  ctx.strokeStyle = '#555555';
+  ctx.strokeStyle = '#666666';
   ctx.font = "16px Helvetica";
 }
 
