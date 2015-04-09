@@ -27,6 +27,8 @@ function plot(canvas, x, y){
   
   // determine endpoints
   var x_range = compute_range(x_accuracy, x.data);
+  x_range[1] = 0;
+  
   var y_range = compute_range(y_accuracy, y.data);
   console.log(x_range);
   console.log(y_range);
@@ -48,7 +50,7 @@ function plot(canvas, x, y){
   // calculate pixels between ticks
   var tick_spacing = (x_accuracy*x_scale);
   var num_ticks =  Math.floor(plot_size.x/tick_spacing);
-  var label_freq = Math.ceil(50/(plot_size.y/num_ticks));
+  var label_freq = Math.ceil(30/(plot_size.y/num_ticks));
   var tick_length = 8;
   var begin = [];
   var end = [];
@@ -160,10 +162,14 @@ function compute_accuracy(data, res){
   var max_value = Math.max.apply(null, data);
   var min_value = Math.min.apply(null, data);
   var accuracy = res;
+  if (res == 6){
+    max_value = 0;
+  }
   if (max_value != min_value){
     
-  
-    var digits = Math.ceil(Math.log(max_value - min_value)/Math.log(10));
+    var diff = max_value - min_value;
+    
+    var digits = Math.ceil(Math.log(diff)/Math.log(10));
   
     // the accuracy should scale with the number of digit
     if(digits != 1)      
@@ -171,17 +177,24 @@ function compute_accuracy(data, res){
       
       // force half-hour/hour scale in this situation
       if (res == 6){
-        if (digits > 7 && digits < 9){
+        console.log("diff= "+diff);
+        console.log("digits= "+digits);
+        if (digits > 7 && diff < 36000000){
+            console.log("peep?");
             accuracy = 1000*60*30;
+        }
+        if (digits < 9 && diff > 36000000){
+            accuracy = 1000*60*60;
         }  
-      }
-      
+    }
     else
       accuracy = res;
   }
-  
+
   if (accuracy < 1)
     accuracy = 1;
+  
+  console.log("accuracy: " + accuracy);
   return accuracy;
 }
 

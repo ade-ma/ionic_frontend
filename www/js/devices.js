@@ -7,10 +7,10 @@ function pretty_int(int){
 }
 
 function pretty_time(millis){
-  addendum = "";
+  preposition = "";
   if (millis < 0){
     millis = -millis;
-    addendum = " ago";
+    preposition = "-";
   }
   
   var hours = millis - millis % (1000*60*60);
@@ -19,7 +19,24 @@ function pretty_time(millis){
   if ((hours == 0) && (minutes == 0) && (seconds < 5)){
     return "Now";
   }
-  return [pretty_int(Math.floor(hours/(1000*60*60))), pretty_int(Math.floor(minutes/(60*1000))), pretty_int(Math.round(seconds/1000))].join(':') + addendum;
+  
+  
+  //return [pretty_int(Math.floor(hours/(1000*60*60))), pretty_int(Math.floor(minutes/(60*1000))), pretty_int(Math.round(seconds/1000))].join(':') + addendum;
+  
+  res = "";
+  if (hours > 0){
+    res = res+ Math.floor(hours/(1000*60*60)) + "h";
+  }
+  
+  if (minutes > 0){
+    res = res + " " + Math.floor(minutes/(60*1000)) + "m";
+  }
+  
+  if (seconds > 0){
+    res = res + " " + Math.floor(seconds/1000) + "s";
+  }
+  
+  return preposition + res;
 }
 
 // a device

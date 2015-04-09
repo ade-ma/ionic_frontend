@@ -77,7 +77,7 @@ function Factor(factor_descriptor){
          *
          */
     
-        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001";
+        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001&hours=12";
         if (this.name == "Lights"){
             return;
         }
