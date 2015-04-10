@@ -5,7 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-SERVER_IP = "104.131.30.130:5000"
+SERVER_IP = "104.131.30.130:5000";
+HOSTORY_HOURS = "12"; // number of hours
+MAX_DATA_LENGTH = "200"; // max number of points to plot
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {

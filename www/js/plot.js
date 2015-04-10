@@ -128,6 +128,7 @@ function plot(canvas, x, y){
   var y_pixel = -1;
   var old_x = -1;
   var old_y = -1;
+  ctx.beginPath();
   for( var i = 0; i < x.data.length; i++){
     // remember last point
     old_x = x_pixel;
@@ -138,11 +139,13 @@ function plot(canvas, x, y){
     // draw line from last point if there was a last point
     if(old_x > 0){
       ctx.lineWidth = 2;
-      draw_line(ctx, [old_x, old_y], [x_pixel, y_pixel]);
+      draw_line(ctx, [old_x, old_y], [x_pixel, y_pixel], false);
     }
+    
     
     // draw a circle around it if it is the last point
     if (x.data.length == i+1){
+        ctx.stroke();
         ctx.beginPath();
         ctx.lineWidth = 4;
         ctx.arc(x_pixel, y_pixel, 2, 0, Math.PI*2);
@@ -243,12 +246,17 @@ function draw_axes(canvas, origin){
             [origin.x, 0]);
 }
 
-function draw_line(ctx, begin, end){
-  // just a small utility to reduce typing
-  ctx.beginPath();
-  ctx.moveTo(begin[0], begin[1]);
-  ctx.lineTo(end[0], end[1]);
-  ctx.stroke();
+function draw_line(ctx, begin, end, drawnow){
+    // just a small utility to reduce typing
+    if(arguments.length == 3){
+        drawnow = true;
+    }
+    if(drawnow)
+        ctx.beginPath();
+    ctx.moveTo(begin[0], begin[1]);
+    ctx.lineTo(end[0], end[1]);
+    if(drawnow)
+        ctx.stroke();
 }
 
 function set_tick_style(ctx){

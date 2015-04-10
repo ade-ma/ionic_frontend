@@ -68,22 +68,27 @@ function Factor(factor_descriptor){
     
     //update values
     this.update = function(service) {
+        
+        // make values2 point to the right list
         var values2 = this.values;
         id = this.id;
         console.log(id);
       
         /*
-         *  This AJAX call should get the latest value for this factor
+         *  This AJAX call should get the latest values for this factor
          *
          */
     
-        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001&hours=12";
+        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001&hours=" + HOSTORY_HOURS + "&max_length=" + MAX_DATA_LENGTH;
         if (this.name == "Lights"){
             return;
         }
         service.get(URL)
         .success(function(data, status, headers, config){
             points = data.split(";");
+            
+            // we can't change where values2 points, or else this.values won't be updated
+            // we also can't access this.values because the context is different here :(
             values2.length = 0;
             for (var i = 0; i < points.length; i++){
                 points[i] = points[i].split("--");
