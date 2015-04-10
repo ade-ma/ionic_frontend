@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 SERVER_IP = "104.131.30.130:5000";
 HOSTORY_HOURS = "12"; // number of hours
-MAX_DATA_LENGTH = "200"; // max number of points to plot
+MAX_DATA_LENGTH = "100"; // max number of points to plot
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($http, Update) {
     Update.all();
-    setInterval(Update.all, 10000);
+    setInterval(Update.all, 20000);
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
