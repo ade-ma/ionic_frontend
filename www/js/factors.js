@@ -16,6 +16,7 @@ function average_latest(){
 }
 
 function average_state(){
+    
     var states = ['all off', 'some on', 'all on'];
     var state_sum = 0;
     for(var i = 0; i < this.devices().length; i++){
@@ -30,11 +31,41 @@ function average_state(){
       return states[2];
 }
 
+
+function plot_values(data, id){
+    var plot_canvas = document.getElementById("value_plot_"+id);
+    if(!plot_canvas){
+        return;
+    }
+    
+    var time = new Date();
+    
+    var x = {
+        data: [],
+        string: function(value){
+                    return pretty_time(value);
+        }};
+    var y = {
+       data: [],
+       string: FACTORS[id].string};
+            
+    for (var i = 0; i < data.length; i++){
+        x.data.push(-time.getTime() + data[i][0]);
+        y.data.push(data[i][1]);
+    }
+    plot(plot_canvas, x, y);
+}
+
+
 // one of the environmental factors, humidity, heat etc.
 function Factor(factor_descriptor){
+    //
   
     // e.g. 'humidity' or 'temperature'
     this.name = factor_descriptor.name;
+    
+    //if the plot should be displayed
+    this.show_detail = 0;
     
     // unique etc.
     this.id = factor_descriptor.id;
@@ -71,8 +102,7 @@ function Factor(factor_descriptor){
         
         // make values2 point to the right list
         var values2 = this.values;
-        id = this.id;
-        console.log(id);
+        var id = this.id;
       
         /*
          *  This AJAX call should get the latest values for this factor
@@ -101,6 +131,10 @@ function Factor(factor_descriptor){
                 
                 values2.push(points[i]);
             }
+            
+            // now plot the values
+            plot_values(values2, id);
+            
         })
         .error(function(data, status, headers, config) {
             console.log("error getting new data")
@@ -135,6 +169,8 @@ function Factor(factor_descriptor){
     }
   }
 }
+
+
 
 var factor_descriptors = [
     { id: 0, 

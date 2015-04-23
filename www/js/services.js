@@ -33,28 +33,6 @@ angular.module('starter.services', [])
         // supposedly good practice to include this check
         if (FACTORS.hasOwnProperty(factor_id)){
           FACTORS[factor_id].update($http);
-          var plot_canvas = document.getElementById("value_plot_"+factor_id);
-          if(plot_canvas){
-            var factor = FACTORS[factor_id];
-            var data = factor.values;
-            var time = new Date();
-    
-            var x = {
-                data: [],
-                string: function(value){
-                            return pretty_time(value);
-                }};
-            var y = {
-              data: [],
-              string: FACTORS[factor_id].string};
-            
-            for (var i = 0; i < data.length; i++){
-              x.data.push(-time.getTime() + data[i][0]);
-              y.data.push(data[i][1]);
-            
-            plot(plot_canvas, x, y);
-            }
-          }
         }
       }
     }

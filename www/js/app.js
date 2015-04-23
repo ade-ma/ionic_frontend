@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($http, Update) {
     Update.all();
-    setInterval(Update.all, 20000);
+    setInterval(Update.all, 30000);
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -56,16 +56,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
     
-    // page for specific factor
-    .state('tab.factor-detail', {
-      url: '/overview/:factorId',
-      views: {
-        'tab-overview': {
-          templateUrl: 'templates/factor_detail.html',
-          controller: 'FactorCtrl'
-        }
-      }
-    })
 
     .state('tab.settings', {
       url: '/settings',

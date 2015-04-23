@@ -1,13 +1,11 @@
 /* Style Sheet for the Ionic SproutWave client */
 
 .factor-overview{
-  display: inline;
 }
 
 li.overview{
-  float:left
-  display:inline;
-  float:left;
+  display:inline-block;
+  /*float:left;*/
   padding:0px;
   margin:0px; 
   height:100px;
@@ -102,4 +100,36 @@ button.override:active {
 }
 .scroll-padding{
   padding: 0px;
+}
+
+.plot {
+  -webkit-transition: 0.5s ease-in;
+  -moz-transition: 0.5s ease-in;
+  transition: 0.5s ease-in;
+  max-height:200px;
+}
+
+.plot.ng-hide {
+  max-height:0;
+}
+
+.plot.ng-hide-add plot.ng-hide-remove{
+  display:block!important;
+}
+
+.detail-img {
+  overflow: hidden;
+  transition-duration: 0.5s;
+  transition-property: transform;
+  display:inline-block!important;
+}
+
+.detail-img.ng-hide {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+  display:inline-block!important;
+}
+
+.detail-img.ng-hide-add detail-img.ng-hide-remove{
+  display:inline-block!important;
 }

@@ -4,54 +4,19 @@ angular.module('starter.controllers', [])
 })
 
 .controller('OverviewCtrl', function($scope, Factors) {
-  $scope.factors = Factors.all();
+    $scope.factors = Factors.all();
+    $scope.detail_click = function(factor, $event) {
+	    $scope.factors[factor].show_detail = 1 - $scope.factors[factor].show_detail;
+	    
+	    // force to redraw DOM
+	    //$scope.$digest();
+	}
 })
 
 .controller('FactorCtrl', function($scope, $stateParams, Factors, $http){
   $scope.factor = Factors.get($stateParams.factorId);
   $scope.factor.service = $http;
   $scope.override = override;
-})
-
-// this directive ensures that plotting happens on the load of the details page
-.directive('plotDirective', function($http){
-  var plotter = function(scope, element, attrs){
-    var id = attrs.id;
-    
-    var factor_id = Number(attrs.id[attrs.id.length -1]);
-    var factor = FACTORS[factor_id];
-    var data = factor.values;
-    
-    
-    // This is all repeated code with the update service :(  Needs cleaning up.
-    
-    var time = new Date();
-    
-    var x = {
-      data: [],
-      string: function(value){
-        return pretty_time(value);
-      }};
-    var y = {
-      data: [],
-      string: FACTORS[factor_id].string};
-    
-    for (var i = 0; i < data.length; i++){
-      x.data.push(-time.getTime() + data[i][0]);
-      y.data.push(data[i][1]);
-    }
-    
-    // on calls not triggered by setTimeout, element[0] is what we need to use
-    // otherwise we want to get a new element via document.getElementById
-    var canvas = document.getElementById(attrs.id);
-    if (canvas != null){
-      plot(canvas, x, y);
-    }
-    else{
-      plot(element[0], x,y);
-    }
-  }
-  return plotter;
 })
 
 .directive('overrideDirective', function(){

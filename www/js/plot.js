@@ -1,13 +1,12 @@
-
-
 function plot(canvas, x, y){
   /*
    * Canvas: a canvas DOM element
    * x,y: X.data a numeric array
    *      X.string function for how to draw a data point (eg units etc)
    */
+  canvas.width  = window.innerWidth;
   var x_label_height = 35;
-  var y_label_width = 50;
+  var y_label_width = 75;
   var origin = {
     x: canvas.width - y_label_width,
     y: canvas.height - x_label_height
@@ -19,7 +18,16 @@ function plot(canvas, x, y){
   };
   
   var ctx = canvas.getContext("2d");
+  
+  // if fetching data, just say so
+  if ((!x)||(!y)||(x.data.length == 0)||(y.data.length == 0)){
+    print_fetching_data(canvas);
+    return;
+  }
+  
+  // clear for actually plotting
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
   
   // determine order of magnitude (step size)
   var x_accuracy = compute_accuracy(x.data, 6);
@@ -174,16 +182,13 @@ function compute_accuracy(data, res){
     
     var digits = Math.ceil(Math.log(diff)/Math.log(10));
   
-    // the accuracy should scale with the number of digit
+    // the accuracy should scale with the number of digits
     if(digits != 1)      
       accuracy = res*Math.pow(10,Math.ceil(digits - 2));
       
       // force half-hour/hour scale in this situation
       if (res == 6){
-        console.log("diff= "+diff);
-        console.log("digits= "+digits);
         if (digits > 7 && diff < 36000000){
-            console.log("peep?");
             accuracy = 1000*60*30;
         }
         if (digits < 9 && diff > 36000000){
@@ -191,33 +196,39 @@ function compute_accuracy(data, res){
         }  
     }
     else
-      accuracy = res;
+      accuracy = 1;
   }
 
   if (accuracy < 1)
     accuracy = 1;
   
-  console.log("accuracy: " + accuracy);
   return accuracy;
 }
 
 function compute_range(accuracy, data){
   // finds endpoints that are nearest multiples of the accuracy
   
-  var end_data = Math.max.apply(null, data);
-  var first_data = Math.min.apply(null, data);
+    var end_data = Math.max.apply(null, data);
+    var first_data = Math.min.apply(null, data);
+
+    var first_point;
+    var end_point;
+    if(Math.abs(end_data - first_data)<accuracy){
+        end_point = end_data + mod(-end_data, accuracy);
+        first_point = first_data - mod(first_data, accuracy);    
+    }
+    else{
+        end_point = end_data + mod(-end_data, accuracy);
+        first_point = first_data - mod(first_data, accuracy);
+    }
   
-  var first_point;
-  var end_point;
-  if(Math.abs(end_data - first_data)<accuracy){
-    end_point = end_data + mod(-end_data, accuracy);
-    first_point = first_data - mod(first_data, accuracy);    
-  }
-  else{
-    end_point = end_data + mod(-end_data, accuracy);
-    first_point = first_data - mod(first_data, accuracy);
-  }
-  return [first_point, end_point];
+    if (mod(-end_data, accuracy) <= accuracy/100){
+        end_point = end_point + accuracy;
+    }
+    if (mod(first_data, accuracy) <= accuracy/100){
+        first_point = first_point - accuracy;
+    }
+    return [first_point, end_point];
 }
 
 function compute_scale(pixels, range){
@@ -263,6 +274,18 @@ function set_tick_style(ctx){
   ctx.lineWidth = 2;
   ctx.strokeStyle = '#666666';
   ctx.font = "16px Helvetica";
+}
+
+function print_fetching_data(canvas){
+    var ctx = canvas.getContext("2d");
+    msg = "Fetching Data...";
+    ctx.font = "36px Helvetica";
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    
+    x = (canvas.width - ctx.measureText(msg).width)/2
+    y = (canvas.height - 18)/2
+    ctx.fillText(msg, x, y);
+    console.log(x,y);
 }
 
 function mod(x,y){
