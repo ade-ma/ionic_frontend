@@ -3,20 +3,43 @@ angular.module('starter.controllers', [])
 .controller('SettingsCtrl', function($scope) {
 })
 
-.controller('OverviewCtrl', function($scope, Factors) {
+.controller('OverviewCtrl', function($scope, $stateParams, Factors) {
     $scope.factors = Factors.all();
+    $scope.farm = $stateParams.farm;
+    console.log($stateParams);   
     $scope.detail_click = function(factor, $event) {
 	    $scope.factors[factor].show_detail = 1 - $scope.factors[factor].show_detail;
 	    
 	    // force to redraw DOM
 	    //$scope.$digest();
 	}
+	
 })
 
 .controller('FactorCtrl', function($scope, $stateParams, Factors, $http){
   $scope.factor = Factors.get($stateParams.factorId);
   $scope.factor.service = $http;
   $scope.override = override;
+})
+
+// this makes the plot reappear after navigating away and back, without waiting for the update cycle
+.directive('plotDirective', function($http){
+  var plotter = function(scope, element, attrs){
+    var id = attrs.id;
+    
+    var factor_id = Number(attrs.id[attrs.id.length -1]);
+    var factor = FACTORS[factor_id];
+    var data = factor.values;
+    
+    var canvas = document.getElementById(attrs.id);
+    if (canvas == null){
+        canvas = element[0];
+    }
+    
+    
+    plot_values(data, factor_id, canvas);
+  }
+  return plotter;
 })
 
 .directive('overrideDirective', function(){

@@ -27,6 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($http, Update) {
     Update.all();
+    console.log("update");
     setInterval(Update.all, 30000);
 })
 
@@ -47,7 +48,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     
     //  overview of stats
     .state('tab.overview', {
-      url: "/overview",
+      url: "/overview/:farm",
       views: {
         'tab-overview': {
           templateUrl: "templates/overview.html",

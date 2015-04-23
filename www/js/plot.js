@@ -38,8 +38,6 @@ function plot(canvas, x, y){
   x_range[1] = 0;
   
   var y_range = compute_range(y_accuracy, y.data);
-  console.log(x_range);
-  console.log(y_range);
   // determine scales (conversion from units of x and y to pixels)
   var x_scale = compute_scale(plot_size.x, x_range);
   var y_scale = compute_scale(plot_size.y, y_range);
@@ -285,7 +283,6 @@ function print_fetching_data(canvas){
     x = (canvas.width - ctx.measureText(msg).width)/2
     y = (canvas.height - 18)/2
     ctx.fillText(msg, x, y);
-    console.log(x,y);
 }
 
 function mod(x,y){

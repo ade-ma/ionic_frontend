@@ -32,12 +32,13 @@ function average_state(){
 }
 
 
-function plot_values(data, id){
-    var plot_canvas = document.getElementById("value_plot_"+id);
-    if(!plot_canvas){
-        return;
+function plot_values(data, id, canvas){
+    if (arguments.length == 2){
+        var canvas = document.getElementById("value_plot_"+id);
+        if(!canvas){
+            return;
+        }
     }
-    
     var time = new Date();
     
     var x = {
@@ -53,7 +54,8 @@ function plot_values(data, id){
         x.data.push(-time.getTime() + data[i][0]);
         y.data.push(data[i][1]);
     }
-    plot(plot_canvas, x, y);
+    
+    plot(canvas, x, y);
 }
 
 

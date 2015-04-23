@@ -2,14 +2,14 @@
   <ion-content>
     <ion-list>
       <ion-item class="factors-list" ng-repeat="factor in factors" type="item-text-wrap">
-      	<ul>
+      	<ul ng-click="detail_click({{factor.id}})">
       	  <li>
             <ul class="factor-overview">
               <li class="factor-name overview"><br/>{{factor.name}}</li> 
               <li class="value-and-state overview">
                 <p class="factor-value">{{factor.summary()}}</p>
                 <!--<p class=state>Devices: {{factor.device_summary()}}</p></li>-->
-              <li class="detail-link overview" ng-click="detail_click({{factor.id}})">
+              <li class="detail-link overview">
               <br/>
                 <img src="img/up_arrow_64.png" height="64px" width="64px" ng-Show="factor.show_detail" class="detail-img"/>
               </li>
@@ -18,6 +18,7 @@
           <li>
             <div class="plot" ng-Show="factor.show_detail">
               <canvas id="value_plot_{{factor.id}}" width="300" height="150" plot-directive>
+              </canvas>
             </div>
           </li>
         </ul>
