@@ -48,7 +48,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     
     //  overview of stats
     .state('tab.overview', {
-      url: "/overview/:farm",
+      url: "/overview/?farm",
       views: {
         'tab-overview': {
           templateUrl: "templates/overview.html",
@@ -69,7 +69,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/overview');
+  $urlRouterProvider.otherwise('/tab/overview/?farm=olin');
 
 });
 
