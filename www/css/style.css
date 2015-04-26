@@ -103,9 +103,9 @@ button.override:active {
 }
 
 .plot {
-  -webkit-transition: 0.5s ease-in;
-  -moz-transition: 0.5s ease-in;
-  transition: 0.5s ease-in;
+  -webkit-transition: 0.5s ease;
+  -moz-transition: 0.5s ease;
+  transition: 0.5s ease;
   max-height:200px;
 }
 

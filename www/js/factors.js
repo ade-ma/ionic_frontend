@@ -78,6 +78,8 @@ function Factor(factor_descriptor){
     // function for appending the right symbol for the units
     this.string = factor_descriptor.string;
     
+    this.farm = "";
+    
     // return a list of all the Device objects that effect this factor
     this._devices = [];
     this.devices = function() {
@@ -111,7 +113,8 @@ function Factor(factor_descriptor){
          *
          */
     
-        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001&hours=" + HOSTORY_HOURS + "&max_length=" + MAX_DATA_LENGTH;
+        URL = "http://"+SERVER_IP+"/range" + this.name + "?ID=001&hours=" + HOSTORY_HOURS + "&max_length=" + MAX_DATA_LENGTH + "&farm=" + this.farm;
+        console.log(URL);
         if (this.name == "Lights"){
             return;
         }

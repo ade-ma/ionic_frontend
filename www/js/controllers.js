@@ -3,10 +3,17 @@ angular.module('starter.controllers', [])
 .controller('SettingsCtrl', function($scope) {
 })
 
-.controller('OverviewCtrl', function($scope, $stateParams, Factors) {
+.controller('OverviewCtrl', function($scope, $stateParams, Factors, Update) {
     $scope.factors = Factors.all();
     $scope.farm = $stateParams.farm;
-    console.log($stateParams);   
+    
+    // initialize each sensor with its farm
+    for(var i = 0; i < $scope.factors.length; i++){
+        $scope.factors[i].farm = $scope.farm;
+    }
+    
+    Update.all();
+    
     $scope.detail_click = function(factor, $event) {
 	    $scope.factors[factor].show_detail = 1 - $scope.factors[factor].show_detail;
 	    
