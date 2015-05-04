@@ -194,7 +194,7 @@ function compute_accuracy(data, res){
         }  
     }
     else
-      accuracy = 1;
+      accuracy = res;
   }
 
   if (accuracy < 1)
