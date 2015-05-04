@@ -79,6 +79,7 @@ function Factor(factor_descriptor){
     this.string = factor_descriptor.string;
     
     this.farm = "";
+    this.track = false;
     
     // return a list of all the Device objects that effect this factor
     this._devices = [];

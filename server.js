@@ -9,11 +9,7 @@ app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
-/*
-app.get('/employees', employees.findAll);
-app.get('/employees/:id', employees.findById);
-app.get('/employees/:id/reports', employees.findReports);
-*/
+
 app.set('port', process.env.PORT || 80);
 
 app.listen(app.get('port'), function () {

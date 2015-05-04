@@ -3,9 +3,17 @@ angular.module('starter.controllers', [])
 .controller('SettingsCtrl', function($scope) {
 })
 
-.controller('OverviewCtrl', function($scope, $stateParams, Factors, Update) {
+.controller('OverviewCtrl', function($scope, $stateParams, Factors, Update, $http) {
     $scope.factors = Factors.all();
-    $scope.farm = $stateParams.farm;
+    
+    if ($stateParams.farm == 'olin'){
+        $scope.farm = 'tangerinis';
+        $scope.track = false;
+    }
+    else{
+        $scope.farm = $stateParams.farm;
+        $scope.track = true;
+    }
     
     // initialize each sensor with its farm
     for(var i = 0; i < $scope.factors.length; i++){
@@ -21,6 +29,9 @@ angular.module('starter.controllers', [])
 	    //$scope.$digest();
 	}
 	
+	var url = "http://"+SERVER_IP+"/log";
+	if ($scope.track)
+	    $http.get(url);
 })
 
 .controller('FactorCtrl', function($scope, $stateParams, Factors, $http){
